@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TUSRoomSeeker</string>
+    <string name="nav_menu">name this oddly</string>
+    <string name="nav_drawer_image">pageNavDrawTest</string>
+    <string name="home">listings</string>
+    <string name="messages">Messages</string>
+    <string name="addListing">Add Listing</string>
+    <string name="map">Map</string>
+    <string name="listing_image">Listing Location\n</string>
+</resources>
