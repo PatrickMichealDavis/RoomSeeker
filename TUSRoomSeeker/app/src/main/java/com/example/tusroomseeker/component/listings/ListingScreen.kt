@@ -36,6 +36,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.tusroomseeker.BaseContainer
 import com.example.tusroomseeker.R
+import com.example.tusroomseeker.component.login.LoginViewModel
 import com.example.tusroomseeker.ui.theme.TusGold
 
 @Composable
@@ -43,12 +44,14 @@ fun ListingScreen(
 
     navController: NavHostController,
     listingViewModel: ListingViewModel,
+    loginViewModel: LoginViewModel
 
 ) {
     val listing:String="Listings"
     BaseContainer(
         navController = navController,
         pageTitle=listing,
+        loginViewModel = loginViewModel
     ) { innerPadding ->
         Surface(
             modifier = Modifier

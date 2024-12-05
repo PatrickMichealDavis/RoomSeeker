@@ -35,18 +35,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.tusroomseeker.BaseContainer
 import com.example.tusroomseeker.R
+import com.example.tusroomseeker.component.login.LoginViewModel
 import com.example.tusroomseeker.ui.theme.TusGold
 
 @Composable
 fun ProfileScreen (
     navController: NavHostController,
     profileViewModel: ProfileViewModel,
+    loginViewModel: LoginViewModel
     ) {
     //need to add an if statement to change this to registration too
     val profile:String="Profile"
     BaseContainer(
     navController = navController,
     pageTitle=profile,
+        loginViewModel = loginViewModel
     ) { innerPadding ->
         Surface(
             modifier = Modifier

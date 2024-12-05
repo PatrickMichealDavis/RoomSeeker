@@ -10,6 +10,9 @@ import com.example.tusroomseeker.LoadScreen
 import com.example.tusroomseeker.component.listings.AddListingScreen
 import com.example.tusroomseeker.component.listings.ListingScreen
 import com.example.tusroomseeker.component.listings.ListingViewModel
+import com.example.tusroomseeker.component.login.LoginScreen
+import com.example.tusroomseeker.component.login.LoginViewModel
+import com.example.tusroomseeker.component.login.SignUpScreen
 import com.example.tusroomseeker.component.map.LocationViewModel
 import com.example.tusroomseeker.component.map.MapScreen
 import com.example.tusroomseeker.component.messages.MessagesScreen
@@ -26,18 +29,21 @@ fun BuildNavigationGraph(
     listingViewModel: ListingViewModel = viewModel(),
     profileViewModel: ProfileViewModel = viewModel(),
     viewMessageModel: ViewMessageModel = viewModel(),
-    locationViewModel: LocationViewModel = viewModel()
+    locationViewModel: LocationViewModel = viewModel(),
+    loginViewModel: LoginViewModel = viewModel()
 ) {
     val navController = rememberNavController()
 
     NavHost(navController, startDestination = "main") {
         composable("main"){LoadScreen(navController)}
-        composable("listing") { ListingScreen(navController,listingViewModel) }
-        composable("profile") { ProfileScreen(navController, profileViewModel) }
-        composable("messages"){ MessagesScreen(navController, viewMessageModel)}
-        composable("view_message"){ ViewMessageScreen(navController, viewMessageModel)}
-        composable("add_listing"){ AddListingScreen(navController, listingViewModel)}
-        composable("map"){ MapScreen(navController, locationViewModel)}
+        composable("login"){ LoginScreen( loginViewModel,navController) }
+        composable("signup"){ SignUpScreen( loginViewModel,navController) }
+        composable("listing") { ListingScreen(navController,listingViewModel,loginViewModel) }
+        composable("profile") { ProfileScreen(navController, profileViewModel,loginViewModel) }
+        composable("messages"){ MessagesScreen(navController, viewMessageModel,loginViewModel)}
+        composable("view_message"){ ViewMessageScreen(navController, viewMessageModel,loginViewModel)}
+        composable("add_listing"){ AddListingScreen(navController, listingViewModel,loginViewModel)}
+        composable("map"){ MapScreen(navController, locationViewModel,loginViewModel)}
 
 
 

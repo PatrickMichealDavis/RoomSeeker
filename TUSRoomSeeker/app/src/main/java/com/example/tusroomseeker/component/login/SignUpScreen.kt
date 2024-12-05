@@ -1,6 +1,5 @@
 package com.example.tusroomseeker.component.login
 
-
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,19 +29,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.tusroomseeker.R
 import com.example.tusroomseeker.ui.theme.TusGold
 
-
 @Composable
-fun LoginScreen(
+fun SignUpScreen(
     loginViewModel: LoginViewModel,
-    navController: NavController
+    navController: NavHostController
 ) {
-   var email by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
 
     var password by remember { mutableStateOf("") }
 
@@ -51,17 +48,17 @@ fun LoginScreen(
 
     LaunchedEffect(authState.value) {
         when(authState.value) {
-            is AuthState.Authenticated -> navController.navigate("listing")
+            is AuthState.Authenticated -> navController.navigate("listings")
             is AuthState.Error -> Toast.makeText(context,
-                (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
-
-            else->Unit
+                (authState.value as AuthState.Error).message,Toast.LENGTH_SHORT).show()
+                // Show error message
+           else->Unit
         }
-    }
+        }
 
 
     Column(modifier = Modifier.fillMaxSize()
-            .fillMaxSize()
+        .fillMaxSize()
         .background(Color.Black)//here is background color
         .padding(horizontal = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -85,23 +82,19 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Button(
-            onClick = { loginViewModel.login(email, password) },
-            modifier = Modifier.width(140.dp),
+            onClick = { loginViewModel.signup(email, password) },
+             modifier = Modifier.width(200.dp),
             shape = RoundedCornerShape(5.dp),
             elevation = ButtonDefaults.buttonElevation(5.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = TusGold
-        ) ) {
-            Text("Sign in")
+            ) ) {
+            Text("Create Account")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        TextButton(onClick = {navController.navigate("signup")}) {
-            Text("Don't have an account? Sign up")
+        TextButton(onClick = {navController.navigate("login")}) {
+            Text("Already have an account? Sign in")
         }
     }
 }
-
-
-
-

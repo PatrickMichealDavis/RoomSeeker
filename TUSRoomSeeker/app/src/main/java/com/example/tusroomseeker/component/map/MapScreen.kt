@@ -31,6 +31,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.example.tusroomseeker.BaseContainer
 import com.example.tusroomseeker.R
 import com.example.tusroomseeker.component.listings.Listing
+import com.example.tusroomseeker.component.login.LoginViewModel
 import com.example.tusroomseeker.component.navigation.Screen
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
@@ -45,13 +46,15 @@ import com.google.maps.android.compose.rememberMarkerState
 
 @Composable
 fun MapScreen(navController: NavHostController,
-                   locationViewModel: LocationViewModel
+                   locationViewModel: LocationViewModel,
+              loginViewModel: LoginViewModel
 )
 {
 //    val places by locationViewModel.loadLocations().observeAsState(listOf())
     BaseContainer(
         navController = navController,
         pageTitle="Map",
+        loginViewModel = loginViewModel
     ) { innerPadding ->
         Surface(
             modifier = Modifier

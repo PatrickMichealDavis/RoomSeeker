@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "359969836635",
+    "project_id": "tusroomseeker",
+    "storage_bucket": "tusroomseeker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359969836635:android:2a64443ce8d512d20f797e",
+        "android_client_info": {
+          "package_name": "com.example.tusroomseeker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-sSnRDTsrFzGk5QYiYZO1k2xKTKCAKtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

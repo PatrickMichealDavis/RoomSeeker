@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.example.tusroomseeker.BaseContainer
+import com.example.tusroomseeker.component.login.LoginViewModel
 import com.example.tusroomseeker.component.profile.Profile
 import com.example.tusroomseeker.ui.theme.TusGold
 import java.util.Calendar
@@ -48,12 +49,14 @@ fun AddListingScreen(
 
     navController: NavHostController,
     listingViewModel: ListingViewModel,
+    loginViewModel: LoginViewModel
 
     ) {
     val listing:String="Add Listing"
     BaseContainer(
         navController = navController,
         pageTitle=listing,
+        loginViewModel = loginViewModel
     ) { innerPadding ->
         Surface(
             modifier = Modifier

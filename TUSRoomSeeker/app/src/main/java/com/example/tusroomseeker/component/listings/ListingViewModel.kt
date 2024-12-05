@@ -20,9 +20,9 @@ class ListingViewModel(application: Application) : AndroidViewModel(application)
 
     fun loadListings(): List<Listing>{
         return listOf(
-            Listing(1,"Single Room", R.drawable.listing1,"20 William street",199.99,"Room for rent price per week"),
-            Listing(2,"Double Room", R.drawable.listing1,"20 Knoxs street",880.99,"Room price per month"),
-            Listing(3,"Single Room", R.drawable.listing1,"45 Quin street",125.00,"Room price per week"),
+            Listing(1,"Single Room", R.drawable.listing1,"20 William street",199.99,"Room for rent price per week",1),
+            Listing(2,"Double Room", R.drawable.listing1,"20 Knoxs street",880.99,"Room price per month",2),
+            Listing(3,"Single Room", R.drawable.listing1,"45 Quin street",125.00,"Room price per week",1),
 
             )
     }

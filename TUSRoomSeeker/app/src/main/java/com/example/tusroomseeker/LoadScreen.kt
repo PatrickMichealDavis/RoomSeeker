@@ -66,7 +66,7 @@ fun LoadScreen(navController:NavHostController){
                 ) {
                     Button(
                     onClick = {
-                       navController.navigate("listing")
+                       navController.navigate("login")
 
                     },
 
@@ -81,7 +81,7 @@ fun LoadScreen(navController:NavHostController){
                 }
 
                     Button(
-                        onClick = { navController.navigate("profile")
+                        onClick = { navController.navigate("signup")
 
                         },
 
@@ -92,7 +92,7 @@ fun LoadScreen(navController:NavHostController){
                             containerColor = TusGold,
                         )
                     ) {
-                        Text(text = "Register", color = Color.Black)
+                        Text(text = "Sign Up", color = Color.Black)
                     }
                 }
 

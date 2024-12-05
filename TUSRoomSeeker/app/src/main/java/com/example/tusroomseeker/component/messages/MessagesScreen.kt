@@ -23,15 +23,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tusroomseeker.BaseContainer
+import com.example.tusroomseeker.component.login.LoginViewModel
 
 @Composable
 fun MessagesScreen(navController: NavHostController,
-                   viewMessageModel: ViewMessageModel
+                   viewMessageModel: ViewMessageModel,
+                   loginViewModel: LoginViewModel
 )
 {
     BaseContainer(
         navController = navController,
         pageTitle="Messages",
+        loginViewModel = loginViewModel
     ) { innerPadding ->
         Surface(
             modifier = Modifier

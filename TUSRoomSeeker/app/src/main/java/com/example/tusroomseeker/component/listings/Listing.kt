@@ -5,4 +5,5 @@ data class Listing( val id: Int = 0,
                    val image: Int,
                    val address:String,
                    val price:Double,
-                   val description: String)
+                   val description: String,
+                   val userId:Int)

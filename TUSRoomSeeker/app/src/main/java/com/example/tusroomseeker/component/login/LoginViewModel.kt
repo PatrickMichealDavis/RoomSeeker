@@ -1,58 +1,77 @@
 package com.example.tusroomseeker.component.login
 
+import android.app.Application
 import android.util.Patterns
-import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseAuth
 import java.util.regex.Pattern
 
 
-class LoginViewModel {
-    var uiState = mutableStateOf(LoginDetails())
-        private set
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val email: String
-        get() = uiState.value.email
-    private val password: String
-        get() = uiState.value.password
+  private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    private val MIN_PASS_LENGTH = 6
-    private val PASS_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{$MIN_PASS_LENGTH,}$"
+    private val _authState = MutableLiveData<AuthState>()
+    val authState: MutableLiveData<AuthState> = _authState
 
-    fun onEmailChange(newValue: String) {
-        uiState.value = uiState.value.copy(email = newValue)
+    fun checkAuthStatus() {
+        if (auth.currentUser == null) {
+            _authState.value = AuthState.Unauthenticated
+        } else {
+            _authState.value = AuthState.Authenticated
+        }
     }
 
-    fun onPasswordChange(newValue: String) {
-        uiState.value = uiState.value.copy(password = newValue)
+    init{
+        checkAuthStatus()
     }
 
-    fun onSignInClick(openAndPopUp: (String, String) -> Unit) {
-        if (!email.isValidEmail()) {
-            showSnackbar("Invalid email address")
+    fun login(email:String,password:String){
+
+        if(email.isEmpty() || password.isEmpty()){
+            _authState.value = AuthState.Error("Email or password must not be empty")
             return
         }
+        _authState.value = AuthState.Loading
+        auth.signInWithEmailAndPassword(email,password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _authState.value = AuthState.Authenticated
+                } else {
+                    _authState.value = AuthState.Error(task.exception?.message ?: "An error occurred")
+                }
+            }
+    }
 
-        if (!password.isValidPassword()) {
-            showSnackbar("Password must contain at least $MIN_PASS_LENGTH characters, including uppercase, lowercase, and digits")
+    fun signup(email:String,password:String){
+
+        if(email.isEmpty() || password.isEmpty()){
+            _authState.value = AuthState.Error("Email or password must not be empty")
             return
         }
-
-        openAndPopUp("HomeScreen", "LoginScreen")
+        _authState.value = AuthState.Loading
+        auth.createUserWithEmailAndPassword(email,password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _authState.value = AuthState.Authenticated
+                } else {
+                    _authState.value = AuthState.Error(task.exception?.message ?: "An error occurred")
+                }
+            }
     }
 
+    fun signout(){
+        auth.signOut()
+       _authState.value = AuthState.Unauthenticated
 
-
-    private fun String.isValidEmail(): Boolean {
-        return this.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 
-    private fun String.isValidPassword(): Boolean {
-        return this.isNotBlank() &&
-                this.length >= MIN_PASS_LENGTH &&
-                Pattern.compile(PASS_PATTERN).matcher(this).matches()
-    }
+}
 
-    private fun showSnackbar(message: String) {
-        // Implement a Snackbar mechanism, or connect with a Composable
-        println(message) // Placeholder for actual Snackbar
-    }
+sealed class AuthState{
+    object Unauthenticated: AuthState()
+    object Authenticated: AuthState()
+    object Loading: AuthState()
+    data class Error(val message: String): AuthState()
 }

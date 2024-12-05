@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.tusroomseeker.R
+import com.example.tusroomseeker.component.login.LoginViewModel
 import com.example.tusroomseeker.ui.theme.TusGold
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,12 +31,22 @@ import com.example.tusroomseeker.ui.theme.TusGold
 fun PageTopAppBar(
     title:String,
     navController: NavHostController,
+   loginViewModel: LoginViewModel,
     onClick: () -> Unit = {},
 
 ) {
     CenterAlignedTopAppBar(
         title = {
-            Text(title)//here patrick change when needed
+            Text(title)
+        },
+        navigationIcon = {
+            IconButton(onClick = { loginViewModel.signout() }) {
+                Icon(
+                    imageVector = Icons.Default.Clear,
+                    contentDescription = "Sign Out",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         },
         actions = {
             IconButton(onClick = { navController.navigate("profile") }) {

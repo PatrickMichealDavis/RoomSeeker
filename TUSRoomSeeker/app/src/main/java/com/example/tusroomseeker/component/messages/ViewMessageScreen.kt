@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.example.tusroomseeker.component.login.LoginViewModel
 import com.example.tusroomseeker.ui.theme.TusGold
 
 @Composable
@@ -41,6 +42,7 @@ fun ViewMessageScreen(
 
     navController: NavHostController,
     viewMessageModel: ViewMessageModel,
+    loginViewModel: LoginViewModel
 
     ) {
     var messages = viewMessageModel.loadMessages();
@@ -48,6 +50,7 @@ fun ViewMessageScreen(
     BaseContainer(
         navController = navController,
         pageTitle="SenderName",//hard codded here patrick!!!!!!
+        loginViewModel = loginViewModel
     ) { innerPadding ->
         Surface(
             modifier = Modifier
