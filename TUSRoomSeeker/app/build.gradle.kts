@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.kotlin.android)
     //id("com.android.application")
     id("com.google.gms.google-services")
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.compose.compiler)
+
+
 }
 
 android {
@@ -19,6 +23,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
@@ -71,6 +79,12 @@ dependencies {
     implementation(libs.maps.compose)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.firebase.firestore.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.google.gson)
+
 
 
 

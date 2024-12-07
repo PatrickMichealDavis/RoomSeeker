@@ -21,6 +21,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -48,6 +50,9 @@ fun ListingScreen(
 
 ) {
     val listing:String="Listings"
+
+    val listingList by listingViewModel.loadListings().observeAsState(listOf())
+
     BaseContainer(
         navController = navController,
         pageTitle=listing,
@@ -59,7 +64,7 @@ fun ListingScreen(
                 .background(Color.Black)
         ) {
             ListingScreenContent(
-                listingViewModel.loadListings(),
+                listingList,
                 navController
             )
         }
@@ -108,26 +113,26 @@ private fun ListingsCard(listing: Listing,navController: NavHostController) {
             textAlign = TextAlign.Center
         )
 
-//        GlideImage(
-//            //model = Uri.parse("file:///android_asset/${news.image}"),
-//            model = Uri.parse("file:///android_asset/1"),
-//
-//            contentDescription = "Listing image",
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(200.dp)
-//                .padding(top = 4.dp, start = 4.dp, end = 4.dp)
-//                .shadow(elevation = 1.dp, shape = RoundedCornerShape(corner = CornerSize(8.dp)))
-//        )
-        Image(
-            painter = painterResource(R.drawable.listing1),
-            contentDescription = "1",
+        GlideImage(
+            model = Uri.parse("file:///android_asset/${listing.image}"),
+            //model = Uri.parse("file:///android_asset/1"),
+
+            contentDescription = "Listing image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .shadow(elevation = 2.dp, shape = RoundedCornerShape(8.dp)))
+                .padding(top = 4.dp, start = 4.dp, end = 4.dp)
+                .shadow(elevation = 1.dp, shape = RoundedCornerShape(corner = CornerSize(8.dp)))
+        )
+//        Image(
+//            painter = painterResource(R.drawable.listing1),
+//            contentDescription = "1",
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(200.dp)
+//                .shadow(elevation = 2.dp, shape = RoundedCornerShape(8.dp)))
 
 
         Text(

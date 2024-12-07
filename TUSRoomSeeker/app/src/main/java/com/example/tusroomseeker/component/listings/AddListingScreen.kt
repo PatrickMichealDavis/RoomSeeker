@@ -24,6 +24,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,6 +53,9 @@ fun AddListingScreen(
     loginViewModel: LoginViewModel
 
     ) {
+
+    val listingList by listingViewModel.loadListings().observeAsState(listOf())
+
     val listing:String="Add Listing"
     BaseContainer(
         navController = navController,
@@ -64,7 +68,7 @@ fun AddListingScreen(
                 .background(Color.Black)
         ) {
             AddListingScreenContent(
-                listingViewModel.loadListings(),
+                listingList,
                 navController
             )
         }

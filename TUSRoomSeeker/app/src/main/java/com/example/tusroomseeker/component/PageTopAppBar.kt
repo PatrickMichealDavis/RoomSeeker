@@ -51,7 +51,7 @@ fun PageTopAppBar(
         actions = {
             IconButton(onClick = { navController.navigate("profile") }) {
                 ProfileIconWithImage(
-                    imageResource = R.drawable.female1,//patrick hard coded
+                    imageResource = R.drawable.noone,
                     size = 40
                 )
             }
