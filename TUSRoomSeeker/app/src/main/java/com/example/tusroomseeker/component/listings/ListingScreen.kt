@@ -53,6 +53,9 @@ fun ListingScreen(
 ) {
     val listing:String="Listings"
     val listingList by listingViewModel.loadListings().observeAsState(listOf())
+//    if(listingList.isEmpty()){
+//        listingViewModel.refreshListings()
+//    }
 
 
 

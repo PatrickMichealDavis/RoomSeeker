@@ -31,7 +31,13 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
         private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
         @Synchronized
-        fun getDatabase(context: Context): RoomSeekerRoomDatabase? {
+        fun getDatabase(context: Context, clearDatabase: Boolean = false): RoomSeekerRoomDatabase? {
+
+            if (clearDatabase) {
+                context.deleteDatabase("roomseeker_database")
+                instance = null
+            }
+
             if (instance == null) {
                 instance = Room.databaseBuilder(
                     context.applicationContext,
@@ -44,6 +50,11 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                 //clearAndSeedDatabase(context)
             }
             return instance
+        }
+
+        fun deleteDatabase(context: Context) {
+            context.deleteDatabase("roomseeker_database")
+            instance = null
         }
 
         private fun clearAndSeedDatabase(context: Context) {
@@ -68,6 +79,8 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
             }
         }
 
+
+
         private suspend fun seedDatabase(context: Context, dbInstance: RoomSeekerRoomDatabase?) {
 
 
@@ -78,6 +91,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     address = "20 William street",
                     price = 199.99,
                     description = "Room for rent, price is per week. Looking for a quiet tenant",
+                    eircode = "V95t2p7",
                     userId = 2),
                 Listing(
                     title="Double Room",
@@ -85,6 +99,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     address = "20 Knoxs street",
                     price = 880.99,
                     description = "Room price per month very reasonable. looking for non smoker",
+                    eircode = "V95t2p7",
                     userId = 2),
                 Listing(
                     title = "Single Room",
@@ -92,6 +107,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     address = "45 Quin street",
                     price=125.00,
                     description = "Room price per week",
+                    eircode = "V95t2p7",
                     userId = 2),
                 Listing(
                     title = "Double Room",
@@ -99,6 +115,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     address = "36 Fake street",
                     price=175.00,
                     description = "Room price per week, looking for part animal must smoke no one boring",
+                    eircode = "V95t2p7",
                     userId = 2),
                 Listing(
                     title = "Single Room",
@@ -106,6 +123,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     address = "123 yellow brick road",
                     price=900.00,
                     description = "Room price per month, looking for female tenant must love cats",
+                    eircode = "V95t2p7",
                     userId = 2),
                 Listing(
                     title = "Double Room",
@@ -113,6 +131,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     address = "89 Green street",
                     price=450.00,
                     description = "Room price per fortnight, looking for a clean tenant must be a student",
+                    eircode = "V95t2p7",
                     userId = 2),
                 Listing(
                     title = "Single Room",
@@ -120,6 +139,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     address = "56 Blue street",
                     price=1200.00,
                     description = "Room price per month, looking for a tenant who knows what class is. Must be a professional",
+                    eircode = "V95t2p7",
                     userId = 2),
                 Listing(
                     title = "Double Room",
@@ -127,6 +147,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     address = "90 Red street",
                     price=215.00,
                     description = "Room price per week, looking for a tenant who is a night owl",
+                    eircode = "V95t2p7",
                     userId = 2),
                 Listing(
                     title = "Single Room",
@@ -134,6 +155,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     address = "28 Purple street",
                     price=149.00,
                     description = "Room price per week, looking for a tenant who is a student must love eating out",
+                    eircode = "V95t2p7",
                     userId = 2),
                 Listing(
                     title = "Double Room",
@@ -141,6 +163,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     address = "58 Orange street",
                     price=799.00,
                     description = "Room price per month, looking for a tenant who is a software developer",
+                    eircode = "V95t2p7",
                     userId = 2),
 
                 )

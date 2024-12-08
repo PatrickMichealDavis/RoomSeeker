@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "e7955db5f6140d60dff22ddb548653df",
+    "identityHash": "8a17af3038e3c12ebef4aaf9864a2dac",
     "entities": [
       {
         "tableName": "listing",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `image` TEXT NOT NULL, `address` TEXT NOT NULL, `price` REAL NOT NULL, `description` TEXT NOT NULL, `userId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `image` TEXT NOT NULL, `address` TEXT NOT NULL, `price` REAL NOT NULL, `description` TEXT NOT NULL, `eircode` TEXT NOT NULL, `userId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -41,6 +41,12 @@
           {
             "fieldPath": "description",
             "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "eircode",
+            "columnName": "eircode",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -170,7 +176,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e7955db5f6140d60dff22ddb548653df')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8a17af3038e3c12ebef4aaf9864a2dac')"
     ]
   }
 }

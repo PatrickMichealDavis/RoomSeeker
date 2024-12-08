@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.tusroomseeker.component.profile.Profile
 import com.example.tusroomseeker.database.RoomSeekerRepository
+import com.example.tusroomseeker.database.RoomSeekerRoomDatabase
 import com.google.firebase.auth.FirebaseAuth
 import java.util.regex.Pattern
 
@@ -38,6 +39,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     init{
         checkAuthStatus()
+        //RoomSeekerRoomDatabase.getDatabase(application, clearDatabase = true)
+
     }
 
     fun getLoggedInUser(): LiveData<Profile> {

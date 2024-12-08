@@ -12,4 +12,5 @@ data class Listing(
                    val address:String,
                    val price:Double,
                    val description: String,
+                   val eircode:String,
                    val userId:Int)

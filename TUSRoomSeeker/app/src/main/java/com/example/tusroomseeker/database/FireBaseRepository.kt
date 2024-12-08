@@ -79,8 +79,6 @@ class FireBaseRepository(context:Context) {
 
     suspend fun fetchAndSaveListings() {
         val listings = fetchListingsFromFirestore()
-        listingDAO?.clearAllListings() // Clear the existing data
-        listingDAO?.resetPrimaryKey() // Reset primary key (if needed)
         listingDAO?.saveMultipleListings(listings) // Save new listings
     }
 }
