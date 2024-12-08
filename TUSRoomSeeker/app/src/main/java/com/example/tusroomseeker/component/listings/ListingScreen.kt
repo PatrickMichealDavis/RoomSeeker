@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -50,8 +52,9 @@ fun ListingScreen(
 
 ) {
     val listing:String="Listings"
-
     val listingList by listingViewModel.loadListings().observeAsState(listOf())
+
+
 
     BaseContainer(
         navController = navController,
@@ -63,10 +66,14 @@ fun ListingScreen(
                 .padding(innerPadding).fillMaxSize()
                 .background(Color.Black)
         ) {
-            ListingScreenContent(
-                listingList,
-                navController
-            )
+            if (listingList.isEmpty()) {
+                EmptyListPlaceholder()
+            } else {
+                ListingScreenContent(
+                    listingList,
+                    navController
+                )
+            }
         }
     }
 }
@@ -79,7 +86,6 @@ private fun ListingScreenContent(
     Column {
 
         LazyColumn(
-            //verticalArrangement = Arrangement.spacedBy(15.dp),
             modifier = Modifier.padding(0.dp)
                 .fillMaxWidth().background(Color.Black)
         ) {
@@ -161,7 +167,7 @@ private fun ListingsCard(listing: Listing,navController: NavHostController) {
 
         Button(
             onClick = {
-                navController.navigate("Messages")
+                navController.navigate("view_message/${listing.userId}")
 
             },
             modifier = Modifier.width(140.dp),
@@ -177,3 +183,19 @@ private fun ListingsCard(listing: Listing,navController: NavHostController) {
 
     }
 }
+
+@Composable
+fun EmptyListPlaceholder() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "No listings available.",
+            color = Color.White
+        )
+    }
+}
+

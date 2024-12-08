@@ -67,9 +67,7 @@ fun ProfileScreen (
 
                 ProfileScreenContent(
                     user,
-                    onSave = { updatedProfile ->
-                        profileViewModel.saveProfile(updatedProfile)
-                    },
+                    profileViewModel,
                     navController
                 )
             }
@@ -81,7 +79,7 @@ fun ProfileScreen (
 @Composable
 private fun ProfileScreenContent(
     user: State<Profile?>,
-    onSave: (Profile) -> Unit,
+   profileViewModel: ProfileViewModel,
     navController: NavHostController
 ) {
     val scope = rememberCoroutineScope()
@@ -231,9 +229,7 @@ private fun ProfileScreenContent(
                         knum = knum,
                         userType = 0
                     )
-                    scope.launch {
-                        onSave(updatedProfile)
-                    }
+                   profileViewModel.saveProfile(updatedProfile)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = TusGold),
                 modifier = Modifier

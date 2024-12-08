@@ -48,10 +48,10 @@ fun SignUpScreen(
 
     LaunchedEffect(authState.value) {
         when(authState.value) {
-            is AuthState.Authenticated -> navController.navigate("listings")
+            is AuthState.Authenticated -> navController.navigate("profile")
             is AuthState.Error -> Toast.makeText(context,
                 (authState.value as AuthState.Error).message,Toast.LENGTH_SHORT).show()
-                // Show error message
+
            else->Unit
         }
         }

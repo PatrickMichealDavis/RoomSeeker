@@ -27,4 +27,7 @@ interface ListingDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveMultipleListings(listings: List<Listing>)
 
+    @Query("DELETE FROM sqlite_sequence WHERE name = 'listings'")
+    suspend fun resetPrimaryKey()
+
 }

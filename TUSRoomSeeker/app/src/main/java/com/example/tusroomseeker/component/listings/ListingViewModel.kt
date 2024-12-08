@@ -3,15 +3,34 @@ package com.example.tusroomseeker.component.listings
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.example.tusroomseeker.R
+import com.example.tusroomseeker.database.FireBaseRepository
 import com.example.tusroomseeker.database.RoomSeekerRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ListingViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = RoomSeekerRepository(application)
+    private val firebaseRepo = FireBaseRepository(application)
 
     fun loadListings(): LiveData<List<Listing>> {
         return repository.fetchListings()
+    }
+
+    suspend fun loadFirebaseListings(): List<Listing> {
+        return firebaseRepo.fetchListingsFromFirestore()
+    }
+
+    fun addAllListingsToFirebase(listings: List<Listing>) {
+        firebaseRepo.addMultipleListings(listings)
+    }
+
+    fun refreshListings() {
+        viewModelScope.launch(Dispatchers.IO) {
+            firebaseRepo.fetchAndSaveListings()
+        }
     }
 
 //    fun loadListings(): List<Listing>{

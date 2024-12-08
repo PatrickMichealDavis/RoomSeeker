@@ -9,17 +9,20 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.tusroomseeker.R
 import com.example.tusroomseeker.component.listings.Listing
 import com.example.tusroomseeker.component.listings.ListingDAO
+import com.example.tusroomseeker.component.messages.Message
+import com.example.tusroomseeker.component.messages.MessageDAO
 import com.example.tusroomseeker.component.profile.Profile
 import com.example.tusroomseeker.component.profile.ProfileDAO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Listing::class, Profile::class], version = 1)
+@Database(entities = [Listing::class, Profile::class,Message::class], version = 2)
 @TypeConverters(ArrayListConverter::class)
 abstract class RoomSeekerRoomDatabase : RoomDatabase() {
     abstract fun listingDAO(): ListingDAO
     abstract fun profileDAO(): ProfileDAO
+    abstract fun messageDAO(): MessageDAO
 
 
 
@@ -36,6 +39,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     "roomseeker_database"
                 )
                     .addCallback(roomDatabaseCallback(context))
+                    .fallbackToDestructiveMigration()
                     .build()
                 //clearAndSeedDatabase(context)
             }
@@ -45,8 +49,9 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
         private fun clearAndSeedDatabase(context: Context) {
             coroutineScope.launch {
                 val dbInstance = getDatabase(context)
-                dbInstance?.listingDAO()?.clearAllListings()
-                dbInstance?.profileDAO()?.clearAllProfiles()// Ensure ProfileDAO has a clearAllProfiles method
+                //dbInstance?.listingDAO()?.clearAllListings()
+               // dbInstance?.profileDAO()?.clearAllProfiles()
+                //dbInstance?.messageDAO()?.clearAllMessages()
                 seedDatabase(context, dbInstance)
             }
         }

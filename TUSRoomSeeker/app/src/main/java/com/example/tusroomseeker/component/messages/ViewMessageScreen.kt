@@ -1,7 +1,7 @@
 package com.example.tusroomseeker.component.messages
 
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,25 +31,32 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import com.example.tusroomseeker.component.login.LoginViewModel
+import com.example.tusroomseeker.component.profile.Profile
 import com.example.tusroomseeker.ui.theme.TusGold
+import kotlinx.coroutines.launch
 
 @Composable
 fun ViewMessageScreen(
 
     navController: NavHostController,
     viewMessageModel: ViewMessageModel,
-    loginViewModel: LoginViewModel
-
+    loginViewModel: LoginViewModel,
+    senderId:Int
     ) {
-    var messages = viewMessageModel.loadMessages();
-    val user: Message? = messages.find { it.receiver==1 }//need to add sender name
+    val user by loginViewModel.getLoggedInUser().observeAsState()
+    val messages = viewMessageModel.fetchMessages(user?.id?:0,senderId).observeAsState()
+    //val messages = viewMessageModel.getMessagesForReceiver(user?.id?:0).observeAsState()
+    val firstMessage = messages.value?.firstOrNull()
     BaseContainer(
         navController = navController,
-        pageTitle="SenderName",//hard codded here patrick!!!!!!
+        pageTitle = firstMessage?.senderName ?: "unknown",
         loginViewModel = loginViewModel
     ) { innerPadding ->
         Surface(
@@ -57,10 +64,13 @@ fun ViewMessageScreen(
                 .padding(innerPadding).fillMaxSize()
                 .background(Color.Black)
         ) {
-            ViewMessageScreenContent(
-                viewMessageModel.loadMessages(),
-                navController
-            )
+            user?.let {
+                ViewMessageScreenContent(
+                    messages.value ?: emptyList(),
+                    viewMessageModel,
+                    senderId, it
+                )
+            }
         }
     }
 }
@@ -68,8 +78,12 @@ fun ViewMessageScreen(
 @Composable
 private fun ViewMessageScreenContent(
     messages: List<Message>,
-    navController: NavHostController
+    viewMessageModel: ViewMessageModel,
+    senderId: Int,
+    user: Profile
 ) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -91,11 +105,13 @@ private fun ViewMessageScreenContent(
                     .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val receiver =1//patrick hard coded should be user Id
+
+
                 for (message in messages) {
+
                     Text(
                         text = message.messageBody,
-                        color = if (message.sender != receiver) Color.Green else Color.Blue,
+                        color = if (message.senderId != message.receiverId) Color.Green else Color.Blue,
                         fontSize = 12.sp,
                         modifier = Modifier
                             .background(Color(0xFFEFEFF4), RoundedCornerShape(8.dp))
@@ -114,8 +130,19 @@ private fun ViewMessageScreenContent(
         MessageInputField(value = message,
             onValueChange = { message = it },
             onSendClick = {
-                println("Message Sent: $message")//add to database patrick?
-                message = ""
+                scope.launch {
+                    val success = viewMessageModel.sendMessageToBothDatabases(
+                        senderId = user.id,
+                        receiverId = senderId,
+                        senderName = user.name,
+                        messageBody = message
+                    )
+                    if (success) {
+                        message = ""
+                        Toast.makeText(context, "Message sent", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Failed to send message", Toast.LENGTH_SHORT).show() }
+                }
             })
     }
 }

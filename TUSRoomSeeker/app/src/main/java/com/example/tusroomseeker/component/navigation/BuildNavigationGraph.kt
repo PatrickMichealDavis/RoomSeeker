@@ -41,10 +41,18 @@ fun BuildNavigationGraph(
         composable("listing") { ListingScreen(navController,listingViewModel,loginViewModel) }
         composable("profile") { ProfileScreen(navController, profileViewModel,loginViewModel) }
         composable("messages"){ MessagesScreen(navController, viewMessageModel,loginViewModel)}
-        composable("view_message"){ ViewMessageScreen(navController, viewMessageModel,loginViewModel)}
+        //composable("view_message"){ ViewMessageScreen(navController, viewMessageModel,loginViewModel)}
         composable("add_listing"){ AddListingScreen(navController, listingViewModel,loginViewModel)}
         composable("map"){ MapScreen(navController, locationViewModel,loginViewModel)}
-
+        composable("view_message/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")?.toIntOrNull() ?: 0
+            ViewMessageScreen(
+                navController = navController,
+                viewMessageModel = viewMessageModel,
+                loginViewModel = loginViewModel,
+                senderId = userId
+            )
+        }
 
 
     }
