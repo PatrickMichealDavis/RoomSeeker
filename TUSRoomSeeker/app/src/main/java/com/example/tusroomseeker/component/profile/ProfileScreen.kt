@@ -1,6 +1,7 @@
 package com.example.tusroomseeker.component.profile
 
 import android.net.Uri
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,12 +40,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.tusroomseeker.BaseContainer
 import com.example.tusroomseeker.component.login.LoginViewModel
 import com.example.tusroomseeker.ui.theme.TusGold
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -78,7 +84,9 @@ fun ProfileScreen (
     }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class,
+    ExperimentalPermissionsApi::class
+)
 @Composable
 private fun ProfileScreenContent(
     user: State<Profile?>,
@@ -112,25 +120,42 @@ private fun ProfileScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-//        Box(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .background(Color.Black, RoundedCornerShape(12.dp)),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            GlideImage(
-//                model = Uri.parse("file:///android_asset/${user.value?.userImage?: "noone.jpg"}"),
-//                //model = Uri.parse("file:///android_asset/1"),
-//
-//                contentDescription = "user image",
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(250.dp)
-//                    .padding(top = 4.dp, start = 4.dp, end = 4.dp)
-//                    .shadow(elevation = 1.dp, shape = RoundedCornerShape(corner = CornerSize(8.dp)))
-//            )
-//        }
+        //gpt walked me through how to set up permissions for notifications
+        //as well as this video https://www.youtube.com/watch?v=QVKo6B7Xd-4
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionsState: PermissionState = rememberPermissionState(
+                android.Manifest.permission.POST_NOTIFICATIONS
+            )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val permissionState: PermissionState = rememberPermissionState(
+                    android.Manifest.permission.POST_NOTIFICATIONS
+                )
+
+                if (!permissionState.status.isGranted) {
+                    LaunchedEffect(Unit) {
+                        permissionState.launchPermissionRequest()
+                    }
+                }
+
+                if (!permissionState.status.isGranted) {
+                    Text(
+                        text = "Permission is required for notifications.",
+                        fontSize = 24.sp
+                    )
+                } else {
+                    Text(
+                        text = "Permission granted!",
+                        fontSize = 24.sp
+                    )
+                }
+            } else {
+                Text(
+                    text = "Permission not required on this Android version.",
+                    fontSize = 24.sp
+                )
+            }
+        }//
 
         Spacer(modifier = Modifier.height(8.dp))
 

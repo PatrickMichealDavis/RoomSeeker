@@ -1,6 +1,7 @@
 package com.example.tusroomseeker.component.listings
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,6 +43,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.example.tusroomseeker.BaseContainer
 import com.example.tusroomseeker.R
 import com.example.tusroomseeker.component.login.LoginViewModel
+import com.example.tusroomseeker.database.MessageStateHolder
 import com.example.tusroomseeker.ui.theme.TusGold
 
 @Composable
@@ -201,4 +204,6 @@ fun EmptyListPlaceholder() {
         )
     }
 }
+
+
 
