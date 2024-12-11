@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +44,7 @@ import com.example.tusroomseeker.BaseContainer
 import com.example.tusroomseeker.component.login.LoginViewModel
 import com.example.tusroomseeker.component.profile.Profile
 import com.example.tusroomseeker.ui.theme.TusGold
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @Composable
@@ -55,6 +57,8 @@ fun AddListingScreen(
     ) {
 
     val listingList by listingViewModel.loadListings().observeAsState(listOf())
+    val user by loginViewModel.getLoggedInUser().observeAsState()
+    val userId = user?.id?:0
 
     val listing:String="Add Listing"
     BaseContainer(
@@ -69,7 +73,9 @@ fun AddListingScreen(
         ) {
             AddListingScreenContent(
                 listingList,
-                navController
+                navController,
+                userId,
+                listingViewModel
             )
         }
     }
@@ -79,9 +85,18 @@ fun AddListingScreen(
 @Composable
 private fun AddListingScreenContent(
     listings: List<Listing>,
-    navController: NavHostController
+    navController: NavHostController,
+    userId: Int,
+    listingViewModel: ListingViewModel
 ) {
+    var title by remember { mutableStateOf("") }
     var text by remember { mutableStateOf("") }
+    var address by remember { mutableStateOf("") }
+    var eircode by remember { mutableStateOf("") }
+    var price by remember { mutableStateOf("") }
+    var image by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -90,6 +105,20 @@ private fun AddListingScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        TextField(
+            value = title,
+            onValueChange = { title = it },
+            label = { Text(text = "title", color = Color.Black) },
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0xFFEFEFF4),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
 
         MultiLineTextArea(
             value = text,
@@ -100,7 +129,9 @@ private fun AddListingScreenContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = { /* Handle add photo */ },
+            onClick = {
+                image=getImage()
+            },
             colors = ButtonDefaults.buttonColors(containerColor = TusGold),
             modifier = Modifier
                 .padding(8.dp)
@@ -117,24 +148,51 @@ private fun AddListingScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val inputFields = listOf("Address", "Eircode", "Price")
-        inputFields.forEach { label ->
-            TextField(
-                value = "",
-                onValueChange = {},
-                label = { Text(text = label, color = Color.Black) },
-                modifier = Modifier
-                    .padding(vertical = 4.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFEFEFF4),
-                    // textColor = Color.Black,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+        TextField(
+            value = address,
+            onValueChange = { address = it },
+            label = { Text(text = "Address", color = Color.Black) },
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0xFFEFEFF4),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
             )
-        }
+        )
+
+        TextField(
+            value = eircode,
+            onValueChange = { eircode = it },
+            label = { Text(text = "Eircode", color = Color.Black) },
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0xFFEFEFF4),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
+
+        TextField(
+            value = price,
+            onValueChange = { price = it },
+            label = { Text(text = "Price", color = Color.Black) },
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0xFFEFEFF4),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -145,7 +203,21 @@ private fun AddListingScreenContent(
                 .padding(horizontal = 16.dp)
         ) {
             Button(
-                onClick = { /* Handle update */ },
+                onClick = {
+                    val newListing = Listing(
+                        title = title,
+                        image = image,
+                        address = address,
+                        price = price.toDouble(),
+                        description = text,
+                        eircode = eircode,
+                        userId = userId
+
+                    )
+                    scope.launch {
+                        listingViewModel.saveListing(newListing)
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = TusGold),
                 modifier = Modifier
                     .weight(1f)
@@ -191,7 +263,7 @@ fun MultiLineTextArea(
         placeholder = { Text(placeholder) },
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 300.dp, max = 600.dp),
+            .heightIn(min = 250.dp, max = 600.dp),
 
         shape = RoundedCornerShape(8.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -201,6 +273,13 @@ fun MultiLineTextArea(
         ),
         maxLines = maxLines
     )
+}
+
+fun getImage(): String {
+
+    val randomNum = (1..10).random()
+
+    return "images/bedroom$randomNum.jpg"
 }
 
 

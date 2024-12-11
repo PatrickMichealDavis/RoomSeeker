@@ -51,7 +51,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             MutableLiveData(
                 Profile(
                     id = 0,
-                    userImage = "",
+
                     name = "",
                     gender = "",
                     email = "",

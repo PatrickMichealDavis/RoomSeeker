@@ -4,8 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.example.tusroomseeker.database.FireBaseRepository
 import com.example.tusroomseeker.database.RoomSeekerRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class ViewMessageModel(application: Application) : AndroidViewModel(application) {
 
@@ -18,34 +16,34 @@ class ViewMessageModel(application: Application) : AndroidViewModel(application)
 
     fun getMessagesForReceiver(receiverId: Int) = repository.getMessagesForReceiver(receiverId)
 
-    suspend fun sendMessageToBothDatabases(
-        senderId: Int,
-        receiverId: Int,
-        senderName: String,
-        messageBody: String
-    ): Boolean {
-        return withContext(Dispatchers.IO) {
-            val message = Message(
-                senderId = senderId,
-                receiverId = receiverId,
-                senderName = senderName,
-                messageBody = messageBody,
-                timestamp = System.currentTimeMillis()
-            )
-
-            val firestoreSuccess = fireBaseRepository.sendMessage(
-                senderId,
-                receiverId,
-                senderName,
-                messageBody
-            )
-
-            if (firestoreSuccess) {
-                repository.sendMessage(message)
-            }
-
-            firestoreSuccess
-        }
-    }
+//    suspend fun sendMessageToBothDatabases(
+//        senderId: Int,
+//        receiverId: Int,
+//        senderName: String,
+//        messageBody: String
+//    ): Boolean {
+//        return withContext(Dispatchers.IO) {
+//            val message = Message(
+//                senderId = senderId,
+//                receiverId = receiverId,
+//                senderName = senderName,
+//                messageBody = messageBody,
+//                timestamp = System.currentTimeMillis()
+//            )
+//
+//            val firestoreSuccess = fireBaseRepository.sendMessage(
+//                senderId,
+//                receiverId,
+//                senderName,
+//                messageBody
+//            )
+//
+//            if (firestoreSuccess) {
+//                repository.sendMessage(message)
+//            }
+//
+//            firestoreSuccess
+//        }
+//    }
 
 }

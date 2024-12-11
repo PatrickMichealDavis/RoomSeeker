@@ -16,6 +16,10 @@ class RoomSeekerRepository(application: Application) {
         return listingDao.getAllListings()
     }
 
+    suspend fun saveListing(listing: Listing) {
+        listingDao.saveListing(listing)
+    }
+
     fun fetchProfile(id:Int) : LiveData<Profile> {
         return profileDao.getProfile(id)
     }

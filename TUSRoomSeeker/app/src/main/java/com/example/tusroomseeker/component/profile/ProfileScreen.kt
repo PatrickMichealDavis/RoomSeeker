@@ -1,6 +1,7 @@
 package com.example.tusroomseeker.component.profile
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -88,6 +91,8 @@ private fun ProfileScreenContent(
     var gender by remember { mutableStateOf(user.value?.gender ?: "") }
     var email by remember { mutableStateOf(user.value?.email ?: "") }
     var knum by remember { mutableStateOf(user.value?.knum ?: "") }
+    var userType by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
 
     LaunchedEffect(user.value) {
         user.value?.let {
@@ -95,6 +100,7 @@ private fun ProfileScreenContent(
             gender = it.gender
             email = it.email
             knum = it.knum
+            userType = it.userType
         }
     }
 
@@ -106,43 +112,29 @@ private fun ProfileScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Black, RoundedCornerShape(12.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            GlideImage(
-                model = Uri.parse("file:///android_asset/${user.value?.userImage?: "noone.jpg"}"),
-                //model = Uri.parse("file:///android_asset/1"),
-
-                contentDescription = "user image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .padding(top = 4.dp, start = 4.dp, end = 4.dp)
-                    .shadow(elevation = 1.dp, shape = RoundedCornerShape(corner = CornerSize(8.dp)))
-            )
-        }
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .background(Color.Black, RoundedCornerShape(12.dp)),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            GlideImage(
+//                model = Uri.parse("file:///android_asset/${user.value?.userImage?: "noone.jpg"}"),
+//                //model = Uri.parse("file:///android_asset/1"),
+//
+//                contentDescription = "user image",
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(250.dp)
+//                    .padding(top = 4.dp, start = 4.dp, end = 4.dp)
+//                    .shadow(elevation = 1.dp, shape = RoundedCornerShape(corner = CornerSize(8.dp)))
+//            )
+//        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(
-            onClick = { /* Handle add photo */ },
-            colors = ButtonDefaults.buttonColors(containerColor = TusGold),
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(0.5f)
-                .height(50.dp),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text(
-                text = "Add Photo",
-                color = Color.Black,
-                fontWeight = FontWeight.Bold
-            )
-        }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -213,23 +205,54 @@ private fun ProfileScreenContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
+            Button(onClick={userType=0},
+                    colors = ButtonDefaults.buttonColors(containerColor = TusGold),
+                    modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                shape = RoundedCornerShape(8.dp)) {
+                Text(text = "Student", color = Color.Black, fontWeight = FontWeight.Bold)
+            }
+
+            Button(onClick={userType=1},
+                colors = ButtonDefaults.buttonColors(containerColor = TusGold),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                shape = RoundedCornerShape(8.dp)) {
+                Text(text = "Landlord", color = Color.Black, fontWeight = FontWeight.Bold)
+            }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
             Button(
                 onClick = {
                     val updatedProfile = user.value?.copy(
                         name = name,
                         gender = gender,
                         email = email,
-                        knum = knum
+                        knum = knum,
+                        userType = userType
                     ) ?: Profile(
                         id = 0,
-                        userImage = "",
+
                         name = name,
                         gender = gender,
                         email = email,
                         knum = knum,
-                        userType = 0
+                        userType = userType
                     )
                    profileViewModel.saveProfile(updatedProfile)
+                    Toast.makeText(context, "Profile saved successfully!", Toast.LENGTH_SHORT).show()
+//                    name = ""
+//                    gender = ""
+//                    email = ""
+//                    knum = ""
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = TusGold),
                 modifier = Modifier
@@ -238,26 +261,12 @@ private fun ProfileScreenContent(
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    text = "Update",
+                    text = "Confirm",
                     color = Color.Black,
                     fontWeight = FontWeight.Bold
                 )
             }
 
-//            Button(
-//                onClick = { /* Handle save */ },
-//                colors = ButtonDefaults.buttonColors(containerColor = TusGold),
-//                modifier = Modifier
-//                    .weight(1f)
-//                    .padding(start = 8.dp),
-//                shape = RoundedCornerShape(8.dp)
-//            ) {
-//                Text(
-//                    text = "Save",
-//                    color = Color.Black,
-//                    fontWeight = FontWeight.Bold
-//                )
-//            }
         }
     }
 }

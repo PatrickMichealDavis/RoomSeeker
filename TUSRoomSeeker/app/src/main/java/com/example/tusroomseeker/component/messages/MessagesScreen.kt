@@ -85,7 +85,7 @@ private fun MessagesScreenContent(
                     item {
                         Text(
                             text = "No Messages",
-                            color = Color.White,
+                            color = Color.Black,
                             fontSize = 16.sp,
                             modifier = Modifier
                                 .background(Color(0xFFEFEFF4), RoundedCornerShape(8.dp))
@@ -105,8 +105,8 @@ private fun MessagesScreenContent(
                                 .padding(12.dp)
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp).clickable {
-                                    //navController.navigate("view_message/${message.sender}")
-                                    navController.navigate("view_message")
+                                    navController.navigate("view_message/${message.senderId}")
+                                    //navController.navigate("view_message")
 
                                 }
                         )

@@ -61,24 +61,5 @@ class FireBaseRepository(context:Context) {
         db.collection("listings").add(listing)
     }
 
-    fun addMultipleListings(listings: List<Listing>) {
-        listings.forEach { listing ->
-            db.collection("listings").add(listing)
-        }
-    }
 
-    suspend fun fetchListingsFromFirestore(): List<Listing> {
-        return try {
-            val querySnapshot = db.collection("listings").get().await()
-            querySnapshot.documents.mapNotNull { it.toObject(Listing::class.java) }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emptyList()
-        }
-    }
-
-    suspend fun fetchAndSaveListings() {
-        val listings = fetchListingsFromFirestore()
-        listingDAO?.saveMultipleListings(listings) // Save new listings
-    }
 }

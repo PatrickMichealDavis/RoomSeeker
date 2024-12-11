@@ -19,19 +19,25 @@ class ListingViewModel(application: Application) : AndroidViewModel(application)
         return repository.fetchListings()
     }
 
-    suspend fun loadFirebaseListings(): List<Listing> {
-        return firebaseRepo.fetchListingsFromFirestore()
-    }
-
-    fun addAllListingsToFirebase(listings: List<Listing>) {
-        firebaseRepo.addMultipleListings(listings)
-    }
-
-    fun refreshListings() {
+    fun saveListing(listing: Listing) {
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepo.fetchAndSaveListings()
+            repository.saveListing(listing)
         }
     }
+
+//    suspend fun loadFirebaseListings(): List<Listing> {
+//        return firebaseRepo.fetchListingsFromFirestore()
+//    }
+//
+//    fun addAllListingsToFirebase(listings: List<Listing>) {
+//        firebaseRepo.addMultipleListings(listings)
+//    }
+//
+//    fun refreshListings() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            firebaseRepo.fetchAndSaveListings()
+//        }
+//    }
 
 //    fun loadListings(): List<Listing>{
 //        return listOf(

@@ -48,10 +48,10 @@ fun ViewMessageScreen(
     navController: NavHostController,
     viewMessageModel: ViewMessageModel,
     loginViewModel: LoginViewModel,
-    senderId:Int
+    recieverId:Int
     ) {
     val user by loginViewModel.getLoggedInUser().observeAsState()
-    val messages = viewMessageModel.fetchMessages(user?.id?:0,senderId).observeAsState()
+    val messages = viewMessageModel.fetchMessages(user?.id?:0,recieverId).observeAsState()
     //val messages = viewMessageModel.getMessagesForReceiver(user?.id?:0).observeAsState()
     val firstMessage = messages.value?.firstOrNull()
     BaseContainer(
@@ -68,7 +68,7 @@ fun ViewMessageScreen(
                 ViewMessageScreenContent(
                     messages.value ?: emptyList(),
                     viewMessageModel,
-                    senderId, it
+                    recieverId, it
                 )
             }
         }
@@ -79,11 +79,12 @@ fun ViewMessageScreen(
 private fun ViewMessageScreenContent(
     messages: List<Message>,
     viewMessageModel: ViewMessageModel,
-    senderId: Int,
+    recieverId: Int,
     user: Profile
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -111,7 +112,7 @@ private fun ViewMessageScreenContent(
 
                     Text(
                         text = message.messageBody,
-                        color = if (message.senderId != message.receiverId) Color.Green else Color.Blue,
+                        color = if (message.senderId != recieverId) Color.Green else Color.Blue,
                         fontSize = 12.sp,
                         modifier = Modifier
                             .background(Color(0xFFEFEFF4), RoundedCornerShape(8.dp))
@@ -126,24 +127,26 @@ private fun ViewMessageScreenContent(
 
 
         }
-        var message by remember { mutableStateOf("") }
-        MessageInputField(value = message,
-            onValueChange = { message = it },
+        var messageBody by remember { mutableStateOf("") }
+        MessageInputField(
+            value = messageBody,
+            onValueChange = { messageBody = it },
             onSendClick = {
-                scope.launch {
-                    val success = viewMessageModel.sendMessageToBothDatabases(
+                if (messageBody.isNotBlank()) {
+                    val newMessage = Message(
                         senderId = user.id,
-                        receiverId = senderId,
+                        receiverId = recieverId,
                         senderName = user.name,
-                        messageBody = message
+                        messageBody = messageBody,
+                        timestamp = System.currentTimeMillis()
                     )
-                    if (success) {
-                        message = ""
-                        Toast.makeText(context, "Message sent", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Failed to send message", Toast.LENGTH_SHORT).show() }
+                    scope.launch {
+                        viewMessageModel.saveMessage(newMessage)
+                        Toast.makeText(context, "Message Sent", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            })
+            }
+        )
     }
 }
 

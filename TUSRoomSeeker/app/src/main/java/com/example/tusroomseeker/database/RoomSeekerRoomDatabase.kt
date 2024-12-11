@@ -17,7 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Listing::class, Profile::class,Message::class], version = 2)
+@Database(entities = [Listing::class, Profile::class,Message::class], version = 3)
 @TypeConverters(ArrayListConverter::class)
 abstract class RoomSeekerRoomDatabase : RoomDatabase() {
     abstract fun listingDAO(): ListingDAO
@@ -47,7 +47,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     .addCallback(roomDatabaseCallback(context))
                     .fallbackToDestructiveMigration()
                     .build()
-                //clearAndSeedDatabase(context)
+               // clearAndSeedDatabase(context)
             }
             return instance
         }
@@ -174,28 +174,24 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
             val profileList = listOf(
                 Profile(
                     name = "John Doe",
-                    userImage = "images/profile1.jpg",
                     email = "johndoe@gmail.com",
                     gender="male",
                     knum="k00276151",
                     userType=0),
                 Profile(
                     name = "Sarah Smith",
-                    userImage = "images/profile2.jpg",
                     email = "sarahsmith@gmail.com",
                     gender="female",
                     knum="k00276178",
                     userType=1),
                 Profile(
                     name = "Bruce Wayne",
-                    userImage = "images/profile3.jpg",
                     email = "brucewayne@gmail.com",
                     gender="male",
                     knum="k00276119",
                     userType=0),
                 Profile(
                     name = "Scarlett Johansson",
-                    userImage = "images/profile4.jpg",
                     email = "scarjo@gmail.com",
                     gender="female",
                     knum="k00276145",

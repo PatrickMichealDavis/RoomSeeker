@@ -12,4 +12,6 @@ data class Message(
     val senderName:String,
     val messageBody:String,
     val timestamp: Long = System.currentTimeMillis()
-)
+){
+
+}

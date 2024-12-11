@@ -1,7 +1,6 @@
 package com.example.tusroomseeker.component.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -50,7 +49,7 @@ fun BuildNavigationGraph(
                 navController = navController,
                 viewMessageModel = viewMessageModel,
                 loginViewModel = loginViewModel,
-                senderId = userId
+                recieverId = userId
             )
         }
 
