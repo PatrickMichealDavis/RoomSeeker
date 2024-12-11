@@ -31,7 +31,8 @@ import com.example.tusroomseeker.ui.theme.TusGold
 
 @Composable
 fun PageNavigationBar(
-    navController: NavHostController
+    navController: NavHostController,
+    userType:Int
 ) {
     val icons = mapOf(
         Screen.Home to NavBarIcon(
@@ -56,11 +57,18 @@ fun PageNavigationBar(
         )
     )
 
+
+    val filteredScreens = if (userType == 1) {
+        icons.keys
+    } else {
+        icons.keys.filter { it != Screen.AddListing }
+    }
+
     NavigationBar(containerColor = TusGold, modifier = Modifier.height(80.dp) ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
 
-        screens.forEach { screen ->
+        filteredScreens.forEach { screen ->
             val isSelected = currentDestination?.route == screen.route
 
             val label = icons[screen]!!.label
