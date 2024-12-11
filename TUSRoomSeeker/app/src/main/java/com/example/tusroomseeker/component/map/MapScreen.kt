@@ -50,7 +50,7 @@ fun MapScreen(navController: NavHostController,
               loginViewModel: LoginViewModel
 )
 {
-//    val places by locationViewModel.loadLocations().observeAsState(listOf())
+    val places = locationViewModel.loadLocations()
     BaseContainer(
         navController = navController,
         pageTitle="Map",
@@ -62,129 +62,129 @@ fun MapScreen(navController: NavHostController,
                 .background(Color.Black)
         ) {
 
-            MapScreenContent()
-//            MapScreenContent( currentLocation = locationViewModel.lastLocation,
-//                getLastLocation = { locationViewModel.getLastLocation() },
-//                hasLocationPermission = { locationViewModel.hasPermission() },
-//                //placesList = places)
+
+            MapScreenContent( currentLocation = locationViewModel.lastLocation,
+                getLastLocation = { locationViewModel.getLastLocation() },
+                hasLocationPermission = { locationViewModel.hasPermission() },
+                listingLocations = places)
         }
     }
 }
 
-@Composable
-fun MapScreenContent(){
+//@Composable
+//fun MapScreenContent(){
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color.Black)
+//            .padding(16.dp),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Top
+//    ) {
+//       Box(
+//           modifier = Modifier
+//               .fillMaxWidth()
+//               .background(Color.Black, RoundedCornerShape(12.dp)),
+//           contentAlignment = Alignment.Center
+//       ){
+//           Text(text="map screen")
+//       }
+//   }
+//}
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+@Composable
+private fun MapScreenContent(
+    modifier: Modifier = Modifier,
+    currentLocation: Location?,
+    getLastLocation: () -> Unit = {},
+    hasLocationPermission:  () -> Boolean = { false },
+    listingLocations: List<MapDetails> = listOf()
+) {
+    //use this for the dimensions of Limerick when running in an emulator
+    val defaultLocation = LatLng(52.6638, -8.6267)
+
+    val cameraPositionState = rememberCameraPositionState {}
+
+    val uiSettings by remember {
+        mutableStateOf(
+            MapUiSettings(
+                compassEnabled = true,
+                myLocationButtonEnabled = true,
+                rotationGesturesEnabled = true,
+                scrollGesturesEnabled = true,
+                scrollGesturesEnabledDuringRotateOrZoom = true,
+                tiltGesturesEnabled = true,
+                zoomControlsEnabled = true,
+                zoomGesturesEnabled = true
+            )
+        )
+    }
+
+    val properties by remember {
+        mutableStateOf(
+            MapProperties(
+                isBuildingEnabled = false,
+                isMyLocationEnabled = hasLocationPermission(),
+                isIndoorEnabled = false,
+                isTrafficEnabled = false,
+                mapType = MapType.NORMAL,
+                maxZoomPreference = 21f,
+                minZoomPreference = 3f
+            )
+        )
+    }
+
+    GoogleMap(
+        modifier = modifier,
+        properties = properties,
+        uiSettings = uiSettings,
+        cameraPositionState = cameraPositionState
     ) {
-       Box(
-           modifier = Modifier
-               .fillMaxWidth()
-               .background(Color.Black, RoundedCornerShape(12.dp)),
-           contentAlignment = Alignment.Center
-       ){
-           Text(text="map screen")
-       }
-   }
+        getLastLocation()
+        val location = currentLocation?.let {
+            //replace defaultLocation with currentLocation when running on a physical device
+            LatLng(defaultLocation.latitude, defaultLocation.longitude)
+        }
+        for (place in listingLocations ) {
+            DisplayMarker(place)
+        }
+        location?.let {
+            cameraPositionState.move(
+                update = CameraUpdateFactory.newLatLngZoom(it, 12f)
+            )
+        }
+    }
 }
 
-//@Composable
-//private fun MapScreenContent(
-//    modifier: Modifier = Modifier,
-//    currentLocation: Location?,
-//    getLastLocation: () -> Unit = {},
-//    hasLocationPermission:  () -> Boolean = { false },
-//    listingLocations: List<MapDetails> = listOf()
-//) {
-//    //use this for the dimensions of Limerick when running in an emulator
-//    val defaultLocation = LatLng(52.6638, -8.6267)
-//
-//    val cameraPositionState = rememberCameraPositionState {}
-//
-//    val uiSettings by remember {
-//        mutableStateOf(
-//            MapUiSettings(
-//                compassEnabled = true,
-//                myLocationButtonEnabled = true,
-//                rotationGesturesEnabled = true,
-//                scrollGesturesEnabled = true,
-//                scrollGesturesEnabledDuringRotateOrZoom = true,
-//                tiltGesturesEnabled = true,
-//                zoomControlsEnabled = true,
-//                zoomGesturesEnabled = true
-//            )
-//        )
-//    }
-//
-//    val properties by remember {
-//        mutableStateOf(
-//            MapProperties(
-//                isBuildingEnabled = false,
-//                isMyLocationEnabled = hasLocationPermission(),
-//                isIndoorEnabled = false,
-//                isTrafficEnabled = false,
-//                mapType = MapType.NORMAL,
-//                maxZoomPreference = 21f,
-//                minZoomPreference = 3f
-//            )
-//        )
-//    }
-//
-//    GoogleMap(
-//        modifier = modifier,
-//        properties = properties,
-//        uiSettings = uiSettings,
-//        cameraPositionState = cameraPositionState
-//    ) {
-//        getLastLocation()
-//        val location = currentLocation?.let {
-//            //replace defaultLocation with currentLocation when running on a physical device
-//            LatLng(defaultLocation.latitude, defaultLocation.longitude)
-//        }
-//        for (place in listingLocations ) {
-//            DisplayMarker(place)
-//        }
-//        location?.let {
-//            cameraPositionState.move(
-//                update = CameraUpdateFactory.newLatLngZoom(it, 12f)
-//            )
-//        }
-//    }
-//}
-//
-//@OptIn(ExperimentalGlideComposeApi::class)
-//@Composable
-//private fun DisplayMarker(place: MapDetails) {
-//    MarkerInfoWindowContent(
-//        rememberMarkerState(position = place.position()),
-//        title = place.type
-//    ) {
-//        Column(
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            modifier = Modifier
-//                .size(width = 250.dp, height = 150.dp)
-//                .padding(8.dp)
-//        ) {
-//            Text(
-//                modifier = Modifier.padding(top = 6.dp),
-//                text = place.type,
-//                fontWeight = FontWeight.Bold,
-//                color = Color.Black
-//            )
-//            GlideImage(
-//                model =
-//                Uri.parse("file:///android_asset/${place.image}"),
-//                contentDescription = stringResource(id = R.string.listing_image),
-//                contentScale = ContentScale.Crop, modifier = Modifier
-//                    .padding(top = 6.dp)
-//                    .size(100.dp)
-//                    .clip(RoundedCornerShape(70.dp))
-//            )
-//        }
-//    }
-//}
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+private fun DisplayMarker(place: MapDetails) {
+    MarkerInfoWindowContent(
+        rememberMarkerState(position = place.position()),
+        title = place.type
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .size(width = 250.dp, height = 150.dp)
+                .padding(8.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(top = 6.dp),
+                text = place.type,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+            GlideImage(
+                model =
+                Uri.parse("file:///android_asset/${place.image}"),
+                contentDescription = stringResource(id = R.string.listing_image),
+                contentScale = ContentScale.Crop, modifier = Modifier
+                    .padding(top = 6.dp)
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(70.dp))
+            )
+        }
+    }
+}

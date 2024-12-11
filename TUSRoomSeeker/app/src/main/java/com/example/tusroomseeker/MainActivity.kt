@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,9 +39,12 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.firebase.messaging.FirebaseMessaging
 import androidx.compose.ui.text.font.FontWeight
+import com.example.tusroomseeker.component.map.LocationViewModel
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 
 class MainActivity : ComponentActivity() {
+    private val locationViewModel: LocationViewModel by viewModels()
     @OptIn(ExperimentalPermissionsApi::class)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +65,7 @@ class MainActivity : ComponentActivity() {
             TUSRoomSeekerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize().background(Color.Black)) {
                     BuildNavigationGraph()
+                    MapPermissions(locationViewModel)
                     MessageDialog()
 
                 }
@@ -119,6 +124,21 @@ fun MessageDialog() {
             title = { Text(text = title) },
             text = { Text(text = body) }
         )
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun MapPermissions(locationViewModel: LocationViewModel) {
+    val locationPermissionState = rememberMultiplePermissionsState(
+        permissions = listOf(
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    )
+    locationViewModel.updatePermissionState(locationPermissionState)
+    LaunchedEffect(true) {
+        locationPermissionState.launchMultiplePermissionRequest()
     }
 }
 
