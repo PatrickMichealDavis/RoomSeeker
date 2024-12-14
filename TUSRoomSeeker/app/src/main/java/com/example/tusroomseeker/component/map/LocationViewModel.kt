@@ -68,8 +68,9 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
 
     fun loadLocations(): List<MapDetails>{
         return listOf(
-            MapDetails("apt", R.drawable.listing1,52.6638, -8.6267),
-
+            MapDetails("20 William street", "images/bedroom1.jpg",52.6638, -8.6267),
+            MapDetails("20 Knoxs street", "images/bedroom2.jpg",52.6699, -8.6299),
+            MapDetails("45 Quin street", "images/bedroom3.jpg",52.6647, -8.6231),
 
         )
     }

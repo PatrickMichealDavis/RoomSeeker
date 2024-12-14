@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng
 
 data class MapDetails(
     val type: String,
-    val image: Int,
+    val image: String,
     val latitude: Double?,
     val longitude: Double?
 ) {
