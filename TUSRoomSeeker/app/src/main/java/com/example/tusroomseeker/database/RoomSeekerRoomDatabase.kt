@@ -47,7 +47,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     .addCallback(roomDatabaseCallback(context))
                     .fallbackToDestructiveMigration()
                     .build()
-               // clearAndSeedDatabase(context)
+                //clearAndSeedDatabase(context)
             }
             return instance
         }

@@ -24,10 +24,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val _authState = MutableLiveData<AuthState>()
     val authState: MutableLiveData<AuthState> = _authState
 
-    private val loggedInEmail = mutableStateOf("")
+    var loggedInEmail = mutableStateOf("")
 
 
-
+    
     fun checkAuthStatus() {
         if (auth.currentUser == null) {
             _authState.value = AuthState.Unauthenticated

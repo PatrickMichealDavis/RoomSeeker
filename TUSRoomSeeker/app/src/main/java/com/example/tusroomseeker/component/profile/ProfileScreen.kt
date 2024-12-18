@@ -77,7 +77,7 @@ fun ProfileScreen (
                 ProfileScreenContent(
                     user,
                     profileViewModel,
-                    navController
+                    loginViewModel
                 )
             }
         }
@@ -91,7 +91,7 @@ fun ProfileScreen (
 private fun ProfileScreenContent(
     user: State<Profile?>,
    profileViewModel: ProfileViewModel,
-    navController: NavHostController
+    loginViewModel: LoginViewModel
 ) {
     val scope = rememberCoroutineScope()
 
@@ -274,10 +274,7 @@ private fun ProfileScreenContent(
                     )
                    profileViewModel.saveProfile(updatedProfile)
                     Toast.makeText(context, "Profile saved successfully!", Toast.LENGTH_SHORT).show()
-//                    name = ""
-//                    gender = ""
-//                    email = ""
-//                    knum = ""
+                    loginViewModel.loggedInEmail.value=updatedProfile.email
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = TusGold),
                 modifier = Modifier
