@@ -7,6 +7,7 @@ sealed class Screen(
     data object Messages: Screen("messages")
     data object AddListing: Screen("add_listing")
     data object Map: Screen("map")
+    data object ContactUs: Screen("contact_us")
 
 }
 
@@ -14,5 +15,6 @@ val screens = listOf(
     Screen.Home,
     Screen.Messages,
     Screen.AddListing,
-    Screen.Map
+    Screen.Map,
+    Screen.ContactUs
 )

@@ -47,7 +47,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     .addCallback(roomDatabaseCallback(context))
                     .fallbackToDestructiveMigration()
                     .build()
-                //clearAndSeedDatabase(context)
+               // clearAndSeedDatabase(context)this line here ita to populate the database with the seed data
             }
             return instance
         }
@@ -73,7 +73,7 @@ abstract class RoomSeekerRoomDatabase : RoomDatabase() {
                     super.onCreate(db)
                     coroutineScope.launch {
 
-                        //seedDatabase(context, getDatabase(context))
+                        seedDatabase(context, getDatabase(context))
                     }
                 }
             }

@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.MailOutline
@@ -56,6 +58,11 @@ fun PageNavigationBar(
             filledIcon = Icons.Filled.LocationOn,
             outlinedIcon = Icons.Outlined.LocationOn,
             label = stringResource(id = R.string.map)
+        ),
+        Screen.ContactUs to NavBarIcon(
+            filledIcon = Icons.Filled.Call,
+            outlinedIcon = Icons.Outlined.Call,
+            label = stringResource(id = R.string.contactUs)
         )
     )
     val user by loginViewModel.getLoggedInUser().observeAsState()
@@ -67,7 +74,7 @@ fun PageNavigationBar(
         icons.keys.filter { it != Screen.AddListing }
     }
 
-    NavigationBar(containerColor = TusGold, modifier = Modifier.height(80.dp) ) {
+    NavigationBar(containerColor = TusGold) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
 

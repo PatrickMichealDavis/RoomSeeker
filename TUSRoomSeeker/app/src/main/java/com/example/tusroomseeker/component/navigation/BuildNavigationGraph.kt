@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tusroomseeker.LoadScreen
+import com.example.tusroomseeker.component.contactus.ContactUsScreen
 import com.example.tusroomseeker.component.listings.AddListingScreen
 import com.example.tusroomseeker.component.listings.ListingScreen
 import com.example.tusroomseeker.component.listings.ListingViewModel
@@ -52,6 +53,7 @@ fun BuildNavigationGraph(
                 recieverId = userId
             )
         }
+        composable("contact_us") { ContactUsScreen(navController, loginViewModel) }
 
 
     }
