@@ -18,6 +18,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.tusroomseeker.R
+import com.example.tusroomseeker.component.login.LoginViewModel
 import com.example.tusroomseeker.component.navigation.Screen
 import com.example.tusroomseeker.component.navigation.screens
 import com.example.tusroomseeker.ui.theme.TusGold
@@ -32,7 +34,7 @@ import com.example.tusroomseeker.ui.theme.TusGold
 @Composable
 fun PageNavigationBar(
     navController: NavHostController,
-    userType:Int
+    loginViewModel: LoginViewModel
 ) {
     val icons = mapOf(
         Screen.Home to NavBarIcon(
@@ -56,7 +58,8 @@ fun PageNavigationBar(
             label = stringResource(id = R.string.map)
         )
     )
-
+    val user by loginViewModel.getLoggedInUser().observeAsState()
+    val userType = user?.userType ?: 0
 
     val filteredScreens = if (userType == 1) {
         icons.keys

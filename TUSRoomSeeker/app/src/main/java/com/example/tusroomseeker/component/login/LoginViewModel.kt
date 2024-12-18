@@ -72,7 +72,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _authState.value = AuthState.Authenticated
-
+                    loggedInEmail.value = email
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message ?: "An error occurred")
                 }
@@ -100,7 +100,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun signout(){
         auth.signOut()
        _authState.value = AuthState.Unauthenticated
-        loggedInEmail.value = ""
+        //loggedInEmail.value = ""
 
     }
 

@@ -50,7 +50,7 @@ fun BaseContainer(
                 PageTopAppBar( title = pageTitle,navController,loginViewModel
                 )
             },
-            bottomBar = { PageNavigationBar(navController,userType) },
+            bottomBar = { PageNavigationBar(navController,loginViewModel) },
             content = { innerPadding -> pageContent(innerPadding) }
         )
 
